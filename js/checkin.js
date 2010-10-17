@@ -4,7 +4,7 @@ $(document).ready(function() {
 	$('div#map').hide();
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {  
-			current_position = position.coords.latitude + ',' + position.coords.longitude);
+			current_position = position.coords.latitude + ',' + position.coords.longitude;
 			$('span#location').replaceWith(current_position);
 			if (debug) alert(current_position);
 		}); 
