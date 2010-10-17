@@ -1,10 +1,10 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<title>safehonu.com -- safer meetups</title>
+		<title>m.safehonu.com -- safer meetups</title>
 		<link href="css/common.css" rel="stylesheet" type="text/css">
 		<script src="js/jquery-1.4.2.js" type="text/javascript"></script>
-		<script src="js/common.js" type="text/javascript"></script>
+		<script src="js/checkin.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			var _gaq = _gaq || [];
 			_gaq.push(['_setAccount', 'UA-860432-4']);
@@ -19,10 +19,9 @@
 	</head>
 	<body>
 		<div>
+			<img src="img/safehonu.png" alt="safehonu.com -- safer meetups"/>
 			<div>
-				<img src="img/safehonu.png" alt="safehonu.com -- safer meetups"/>
-			</div>
-			<div>
+				<p/>
 				<strong>safehonu.com -- safer meetups</strong>
 				<p/>
 				Username:
@@ -33,24 +32,26 @@
 				<br/>
 				<input type="password"></input>
 				<p/>
-				<em>Check-in at Location: <a href="#">Honolulu, HI</a></em>
+				<div id="location">
+					<!-- TODO: store most recent location in a cookie? -->
+					<em>Check-in at Location: <a id="location" href="#"><span id="location">Honolulu, HI</span></a></em>
+				</div>
 				<p/>
-		 		<input type="submit" style="font-size: 24px" value="Submit"></input>
-				</div>
-				<div>
-					<span>(see also)</span>
-					<p/>
-					<span>
-						<a href="http://safehonu.com">safehonu.com</a>
-						&nbsp;&nbsp;&nbsp;or&nbsp;&nbsp;&nbsp;
-						<a href="http://safehonu.com/create">safehonu.com/create</a>
-					</span>
-				</div>
-				<div>
-					<span>(contact)</span>
-					<p/>
-					<a href="mailto:ninjaturtle@safehonu.com">ninjaturtle@safehonu.com</a>
-				</div>
+				<input id="checkin" type="button" style="font-size: 24px" value=" Submit "></input>
+			</div>
+			<div>
+				<span>(see also)</span>
+				<p/>
+				<span>
+					<a href="http://safehonu.com">safehonu.com</a>
+					&nbsp;&nbsp;&nbsp;or&nbsp;&nbsp;&nbsp;
+					<a href="http://safehonu.com/create">safehonu.com/create</a>
+				</span>
+			</div>
+			<div>
+				<span>(contact)</span>
+				<p/>
+				<a href="mailto:ninjaturtle@safehonu.com">ninjaturtle@safehonu.com</a>
 			</div>
 		</div>
 	</body>
