@@ -1,6 +1,7 @@
 $(document).ready(function() {
 	var debug = true;
 	var current_position = null;
+	$('div#map').hide();
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {  
 			current_position = position;
@@ -9,7 +10,11 @@ $(document).ready(function() {
 		}); 
 	} 
 	$('a#location').click(function(event) {
-		$('div#map').replaceWith('<iframe src="http://maps.google.com/maps/api/staticmap?markers=size:mid|color:purple|label:!|'+current_position+'&size=500x200&sensor=false"');// width="400" height="300" frameborder="0"></iframe>');
+		var src = 'http://maps.google.com/maps/api/staticmap?markers=size:mid|color:purple|label:!|'+current_position+'&size=350x300&sensor=false';
+		if (debug) alert('img#map.src: ' + src);
+		$('img#map').attr("src", src).load(function() {
+			$('div#map').show();
+		});
 	});
 	$('input#checkin').click(function(event) {
 		if (debug) alert('current-position: ' + current_position);
