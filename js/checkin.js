@@ -1,6 +1,6 @@
 $(document).ready(function() {
-	$('a#video').click(function(event) {
-		$('div#video').replaceWith('<div id="caro-bg"><div id="caro-fg"><iframe src="http://player.vimeo.com/video/2613544?byline=0&amp;portrait=0&amp;color=c9ffff" width="400" height="300" frameborder="0"></iframe></div></div><br/>');
+	$('input#check-in').click(function(event) {
+		alert('check-in!');
 	});
 	/*
 	var current_location = ''; // detect?
