@@ -7,7 +7,6 @@ $(document).ready(function() {
 			current_position = position.coords.latitude + ',' + position.coords.longitude;
 			$('img#busy').hide();
 			$('span#location').replaceWith(current_position);
-			if (debug) alert(current_position);
 		}); 
 	} 
 	$('a#location').click(function(event) {
@@ -34,11 +33,11 @@ $(document).ready(function() {
 			dataType: "json",
 			success: function(response) {
 				// TODO: notification = success
-				if (debug) alert('Success: ' + response);
+				//if (debug) alert('Success: ' + response);
 			},
 			error: function(response) {
 				// TODO: notification = error
-				if (debug) alert('Error: ' + response);
+				//if (debug) alert('Error: ' + response);
 			}
 		});
 	});
