@@ -1,9 +1,11 @@
+@import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz&subset=latin);
+
 body {
 	background-color: #c9ffff;
 	color: #000; 
-	text-shadow: 1px 1px 1px #fff; 
-	font-family: sans-serif, serif;
-	font-size: 20px;
+	text-shadow: 2px 2px 2px #fff;
+	font-family: 'Yanone Kaffeesatz', sans-serif, serif;
+	font-size: 30px;
 	margin: 0; 
 	padding: 10px; 
 }
@@ -14,16 +16,23 @@ div {
 }
 input[type="text"], input[type="password"], textarea {
 	font-family: inherit;
-	font-size: 24px;
+	font-size: inherit;
 	padding: 2px;
 	width: 350px;
 }
 input[type="button"] {
 	font-family: inherit;
-	font-size: 24px;
+	font-size: 36px;
 	padding: 5px;
 	text-shadow: inherit; 
 }
 span, span a {
 	vertical-align: top;
+}
+span.smaller {
+	color: #7a9b9b;
+	font-size: 24px;
+}
+span.larger {
+	font-size: 38px;
 }
