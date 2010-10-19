@@ -4,7 +4,7 @@ $(document).ready(function() {
 	$('div#map').hide();
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {  
-			$('img#busy').hide();
+			$('div#loading').hide();
 			current_position = position.coords.latitude + ',' + position.coords.longitude;
 			var src = 'http://maps.google.com/maps/api/staticmap?markers=size:mid|color:purple|label:!|'+current_position+'&size=350x300&sensor=false';
 			$('img#map').attr('src', src).load(function() {
