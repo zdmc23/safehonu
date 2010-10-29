@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	$('div#map').hide();
 	$('div#meta').hide();
 	var dd = new Date();
   $('select#year').val(dd.getFullYear());
@@ -23,6 +24,14 @@ $(document).ready(function() {
   var ampm = ((hour % 12) > 1) ? 'PM' : 'AM';
   $('select#ampm').val(ampm);
 	// 
+	$('input#map').click(function(event) {
+		var location = validate($('input#location').val());
+		alert(location);
+		var src = 'http://maps.google.com/maps/api/staticmap?markers=size:mid|color:purple|label:!|'+location+'&size=350x300&sensor=false';
+		$('img#map').attr('src', src).load(function() {
+			$('div#map').show();
+		}); 
+	});
 	$('a#emerg').click(function() {
 		$('a#emerg').replaceWith('Emergency Email (2):<br/><input id="emerg2" type="email"></input>');
 		return false;
