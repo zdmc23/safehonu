@@ -14,13 +14,13 @@ $(document).ready(function() {
 	} 
 	$('input#checkin').click(function(event) {
 		var checkin = {
-    	username : $('input#username').val(),
+    	email : $('input#email').val(),
     	password : $('input#password').val(),
     	coords : current_position
 		}
 		if (debug) alert(JSON.stringify(checkin));
 		$.ajax({
-			username: checkin.username,
+			username: checkin.email,
 			password: checkin.password,
 			data: checkin.coords,
 			url: "http://api.safehonu.com/checkin", //TODO: HTTPS
