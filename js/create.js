@@ -26,7 +26,6 @@ $(document).ready(function() {
 	// 
 	$('input#map').click(function(event) {
 		var location = validate($('input#location').val());
-		alert(location);
 		var src = 'http://maps.google.com/maps/api/staticmap?markers=size:mid|color:purple|label:!|'+location+'&size=350x300&sensor=false';
 		$('img#map').attr('src', src).load(function() {
 			$('div#map').show();
