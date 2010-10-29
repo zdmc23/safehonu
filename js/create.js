@@ -23,11 +23,53 @@ $(document).ready(function() {
   var ampm = ((hour % 12) > 1) ? 'PM' : 'AM';
   $('select#ampm').val(ampm);
 	// 
-	$('a#emerg').click(function(event) {
+	$('a#emerg').click(function() {
 		$('a#emerg').replaceWith('Emergency Email (2):<br/><input id="emerg2" type="email"></input>');
+		return false;
 	});
-	$('a#meta').click(function(event) {
+	$('a#meta').click(function() {
 		$('div#meta').show();
 		$('div#action').hide();
+		return false;
 	});
+	$('input#create').click(function(event) {
+		var location = validate($('input#location').val());
+		var year = validate($('select#year').val());
+		var month = validate($('select#month').val());
+		var day = validate($('select#day').val());
+		var hour = validate($('select#hour').val());
+		var min = validate($('select#min').val());
+		var ampm= validate($('select#ampm').val());
+		var emerg = validate($('input#emerg').val());
+		var emerg2 = validate($('input#emerg2').val());
+		var email = validate($('input#email').val());
+		var password = validate($('input#password').val());
+		var meta_url = validate($('input#meta-url').val());
+		var meta_name = validate($('input#meta-name').val());
+		var meta_phone = validate($('input#meta-phone').val());
+		var meta_email = validate($('input#meta-email').val());
+		var meta_any = validate($('textarea#meta-any').val());
+		var create = {
+    	location : location,
+    	datetime : (year + "-" + month + "-" + day + " " + hour + ":" + min + " " + ampm),
+			notify : {
+				email : emerg,
+				email2 : emerg2
+			},
+			email : email,
+			password : password,
+			metadata : {
+				url : meta_url,
+				name : meta_name,
+				phone : meta_phone,
+				email : meta_email,
+				anything : meta_any
+			}
+		}   
+		alert(JSON.stringify(create))
+		//window.location = 'http://safehonu.com/create';
+	});
+	function validate(input) {
+		return input;
+	}
 });

@@ -22,14 +22,6 @@
 				Date: <span class="smaller"><em>YYYY-MM-dd</em></span>
 				<br/>
 				<span>
-					<!--
-					<input id="year" style="width: 65px" type="text"></input>
-					<input id="month" style="width: 40px" type="text"></input>
-					<input id="day" style="width: 40px" type="text"></input>
-					:
-					<input id="hour" style="width: 40px" type="text"></input>
-					<input id="minute" style="width: 39px" type="text"></input>
-					-->
 					<select id="year">
 						<option>2010</option>
 						<option>2011</option>
@@ -115,7 +107,7 @@
 				<p/>
 				Emergency Email: <span class="smaller"><em>(to send notifications)</em></span>
 				<br/>
-				<input id="emergency" type="email"></input>
+				<input id="emerg" type="email"></input>
 				<br/>
 				<a id="emerg" href="#">(+) add another emergency email</a>
 				<p/>
@@ -127,35 +119,35 @@
 				<br/>
 				<input id="password" type="password"></input>
 				<p/>
-				<div id="action">
+				<div id="action" style="padding: 0px">
 					<span>
 						<input id="create" type="button" value=" Create! "></input>
 						&nbsp;or&nbsp; 
 						<a id="meta" href="#">(+) add metadata</a>
 					</span>
 				</div>
-				<div id="meta">
+				<div id="meta" style="padding: 0px">
 					<span class="smaller"><em>OPTIONAL:<br/>include any additional information about the person or the meetup, for us to record</em></span>
 					<p/>
 					URL: <span class="smaller"><em>(we'll scrape this URL)</em></span>
 					<br/>
-					<input id="url" type="url"></input>
+					<input id="meta-url" type="url"></input>
 					<br/>
 					Name:
 					<br/>
-					<input id="name" type="text"></input>
+					<input id="meta-name" type="text"></input>
 					<br/>
 					Phone:
 					<br/>
-					<input id="phone" type="phone"></input>
+					<input id="meta-phone" type="phone"></input>
 					<br/>
 					Email:
 					<br/>
-					<input id="email" type="email"></input>
+					<input id="meta-email" type="email"></input>
 					<br/>
 					Anything else:
 					<br/>
-					<textarea id="anything"></textarea>
+					<textarea id="meta-any"></textarea>
 					<p/>
 					<input id="create" type="button" value=" Create! "></input>
 				</div>
