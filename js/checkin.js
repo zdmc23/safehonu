@@ -13,12 +13,11 @@ $(document).ready(function() {
 		}); 
 	} 
 	$('input#checkin').click(function(event) {
-		//TODO: validate form data and current_position 
-		//if (current_position != null) {
+		//TODO: validate form data and current_position(!= null) 
 		var checkin = {
     	username: $('input#email').val(),
     	password: $('input#password').val(),
-    	datetime: new Date(),
+    	datetime: new Date().toUTCString(), // GMT!
     	location: {
 				lat: current_position.split(',')[0],
 				lng: current_position.split(',')[1]
@@ -26,9 +25,7 @@ $(document).ready(function() {
 		}
 		if (debug) alert(JSON.stringify(checkin));
 		$.ajax({
-			//username: checkin.username,
-			//password: checkin.password,
-			data: checkin, //checkin.location
+			data: checkin, 
 			url: "http://safehonu.com/post", //TODO: HTTPS
 			type: "POST",
 			contentType: "application/json",
@@ -36,11 +33,9 @@ $(document).ready(function() {
 			dataType: "json",
 			success: function(response) {
 				// TODO: notification = success
-				if (debug) alert('Success: ' + response);
 			},
 			error: function(response) {
 				// TODO: notification = error
-				if (debug) alert('Error: ' + response);
 			}
 		});
 	});
