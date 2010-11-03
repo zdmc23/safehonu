@@ -13,13 +13,15 @@ $(document).ready(function() {
 		}); 
 	} 
 	$('input#checkin').click(function(event) {
+		//TODO: validate form data and current_position 
+		//if (current_position != null) {
 		var checkin = {
     	username: $('input#email').val(),
     	password: $('input#password').val(),
     	datetime: new Date(),
     	location: {
-				lat: current_postion.split(',')[0],
-				lng: current_postion.split(',')[1]
+				lat: current_position.split(',')[0],
+				lng: current_position.split(',')[1]
 			}
 		}
 		if (debug) alert(JSON.stringify(checkin));
