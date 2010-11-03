@@ -14,27 +14,31 @@ $(document).ready(function() {
 	} 
 	$('input#checkin').click(function(event) {
 		var checkin = {
-    	email : $('input#email').val(),
-    	password : $('input#password').val(),
-    	coords : current_position
+    	username: $('input#email').val(),
+    	password: $('input#password').val(),
+    	datetime: new Date(),
+    	location: {
+				lat: current_postion.split(',')[0],
+				lng: current_postion.split(',')[1]
+			}
 		}
 		if (debug) alert(JSON.stringify(checkin));
 		$.ajax({
-			username: checkin.email,
-			password: checkin.password,
-			data: checkin.coords,
-			url: "http://api.safehonu.com/checkin", //TODO: HTTPS
+			//username: checkin.username,
+			//password: checkin.password,
+			data: checkin, //checkin.location
+			url: "http://safehonu.com/post", //TODO: HTTPS
 			type: "POST",
 			contentType: "application/json",
 			timeout: 60000,
 			dataType: "json",
 			success: function(response) {
 				// TODO: notification = success
-				//if (debug) alert('Success: ' + response);
+				if (debug) alert('Success: ' + response);
 			},
 			error: function(response) {
 				// TODO: notification = error
-				//if (debug) alert('Error: ' + response);
+				if (debug) alert('Error: ' + response);
 			}
 		});
 	});
