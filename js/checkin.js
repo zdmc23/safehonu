@@ -13,7 +13,13 @@ $(document).ready(function() {
 		}); 
 	} 
 	$('input#checkin').click(function(event) {
-		//TODO: validate form data and current_position(!= null) 
+		//TODO: improve validation 
+		var error = 'Ah, shoots brah!  <strong>Unable to get da geo-coordinates</strong>';
+		error += '<br/>&nbsp;&nbsp;&nbsp;(please try again, at da kine time)';
+		if (current_position === null) {
+			modal_error(error);
+			return;
+		}
 		var checkin = {
     	username: $('input#email').val(),
     	password: $('input#password').val(),
@@ -23,20 +29,32 @@ $(document).ready(function() {
 				lng: current_position.split(',')[1]
 			}
 		}
-		if (debug) alert(JSON.stringify(checkin));
+		//if (debug) alert(JSON.stringify(checkin));
 		$.ajax({
-			data: checkin, 
-			url: "http://safehonu.com/post", //TODO: HTTPS
+			data: JSON.stringify(checkin), 
+			url: "http://localhost/post", 
+			//url: "http://safehonu.com/post", //TODO: HTTPS
 			type: "POST",
 			contentType: "application/json",
 			timeout: 60000,
 			dataType: "json",
 			success: function(response) {
-				// TODO: notification = success
+				(response.info) ? modal_info(response.info) : modal_error(response.error);
+				$('input#checkin').attr('disabled','disabled');
 			},
 			error: function(response) {
-				// TODO: notification = error
+				// TODO: log errors
+				var error = 'Ah, shoots brah!  <strong>Unable to log da check-in</strong>';
+				error += '<br/>&nbsp;&nbsp;&nbsp;(please try again, at da kine time)';
+				modal_error(error);
+				$('input#checkin').attr('disabled','disabled');
 			}
 		});
 	});
+	function modal_info(message) {
+		$('div#modal').addClass('info').html(message).show();//.fadeTo(60000,0);
+	}
+	function modal_error(error) {
+		$('div#modal').addClass('error').html(error).show();//.fadeTo(60000,0);
+	}
 });

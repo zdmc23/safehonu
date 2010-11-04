@@ -77,7 +77,7 @@ $(document).ready(function() {
 		var meta_phone = validate($('input#meta-phone').val());
 		var meta_email = validate($('input#meta-email').val());
 		var meta_any = validate($('textarea#meta-any').val());
-		var create = {
+		var event = {
     	location: location,
     	datetime: new Date(year + "-" + month + "-" + day + " " + hour + ":" + min).toUTCString(),
 			notify: {
@@ -94,27 +94,36 @@ $(document).ready(function() {
 				anything : meta_any
 			}
 		}   
-		alert(JSON.stringify(create))
+		//alert(JSON.stringify(create))
 		$.ajax({
 			//username: create.username,
 			//password: create.password,
-			data: create,
+			data: JSON.stringify(event),
+			url: "http://localhost/post", 
 			//url: "http://safehonu.com/post", //TODO: HTTPS
-			url: "http://localhost/post", //TODO: HTTPS
 			type: "POST",
 			contentType: "application/json",
 			timeout: 60000,
 			dataType: "json",
 			success: function(response) {
-				// TODO: notification = success
-				//if (debug) alert('Success: ' + response);
+				(response.info) ? modal_info(response.info) : modal_error(response.error);
+				$('input#create').attr('disabled','disabled');
 			},
 			error: function(response) {
-				// TODO: notification = error
-				//if (debug) alert('Error: ' + response);
+				// TODO: log errors
+				var error = 'Error: Ah, shoots brah!  Unable to create da event';
+				error += '<br/>&nbsp;&nbsp;&nbsp;(please try again, at da kine time)';
+				modal_error(error);
+				$('input#create').attr('disabled','disabled');
 			}
-		});
+		});   
 	});
+	function modal_info(message) {
+		$('div#modal').addClass('info').html(message).show();//.fadeTo(60000,0);
+	}
+	function modal_error(error) {
+		$('div#modal').addClass('error').html(error).show();//.fadeTo(60000,0);
+	}
 	function validate(input) {
 		return input;
 	}

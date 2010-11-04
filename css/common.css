@@ -14,6 +14,19 @@ div {
 	padding: 10px;
 	width: 390px;
 }
+div#modal {
+ 	border-radius: 10px 20px 10px 20px; 
+	font-size: 20px;
+	height: 50px;
+	width: 100%;
+	padding-left: 20px;
+}
+div .info {
+	background-color: #f9ffc9;
+}
+div .error {
+	background-color: #ffc9c9;
+}
 input[type="email"], input[type="password"], input[type="phone"], input[type="text"], input[type="url"], textarea {
 	font-family: inherit;
 	font-size: inherit;
