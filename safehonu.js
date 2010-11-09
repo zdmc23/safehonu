@@ -12,7 +12,7 @@ http_mod.createServer(function (req, res) {
 			confirm(req,res);
 		break;
 		case '/delete':
-			delete(req,res);
+			delet(req,res);
 		break;
 		default:
 			res.writeHead(404);
@@ -31,12 +31,12 @@ function post(req,res) {
 			var message = 'We\'re lookin\' out for ya... check-in soon!  Mahalo'; 
 			message += '<br/>&nbsp;&nbsp;&nbsp;(to create another, just refresh the page)';
   		res.end(JSON.stringify({ 'info': message }));
-			handle_event(post);
+			event(post);
 		} else if (post.email && post.datetime && post.location.lat && post.location.lng) {
 			var message = 'A hui hou... Until we meet again!  Mahalo'; 
 			message += '<br/>&nbsp;&nbsp;&nbsp;(to check-in afresh, just refresh .. the page)';
   		res.end(JSON.stringify({ 'info': message }));
-			handle_checkin(post);
+			checkin(post);
 		} else {
   		res.end(JSON.stringify({ 'error': 'Unknown data format!' }));
 		}
@@ -53,7 +53,7 @@ function confirm(req,res) {
 	}
 }
 
-function delete(req,res) {
+function delet(req,res) {
 	if (req.method === 'GET') { 
   	res.writeHead(200, {'Content-Type': 'text/html'});
 	} else if (req.method === 'DELETE') {
@@ -63,7 +63,7 @@ function delete(req,res) {
 	}
 }
 
-function checkin(checkin) {
+function checkin(post) {
 	var couchdb = http_mod.createClient(5984, 'localhost');
 	var request = couchdb.request('GET', '/events/_design/byAuth/_view/byAuthOnly');
 	request.end();
@@ -75,12 +75,12 @@ function checkin(checkin) {
 			console.log('BODY: ' + chunk);
 		});
 	});
-	console.log(JSON.stringify(checkin);
+	console.log(JSON.stringify(post));
 }
-function event(event) {
+function event(post) {
 	var couchdb = http_mod.createClient(5984, 'localhost');
 	var request = couchdb.request('POST', '/events', {'Content-type': 'application/json'});
-	request.write(JSON.stringify(event),encoding='utf-8');
+	request.write(JSON.stringify(post),encoding='utf-8');
 	request.end();
 	request.on('response', function (response) {
 		console.log('STATUS: ' + response.statusCode);
@@ -90,5 +90,5 @@ function event(event) {
 			console.log('BODY: ' + chunk);
 		});
 	});
-	console.log(JSON.stringify(event);
+	console.log(JSON.stringify(post));
 }
