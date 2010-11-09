@@ -1,6 +1,5 @@
 $(document).ready(function() {
 	$('div#map').hide();
-	$('div#meta').hide();
 	var dd = new Date();
   $('select#year').val(dd.getFullYear());
 	var month = dd.getMonth()+1;
@@ -9,7 +8,6 @@ $(document).ready(function() {
 	var day = dd.getDate();
   var fmt_day = (day < 10) ? '0' + day : day;
   $('select#day').val(fmt_day);
-	$('input#date').val($('select#year').val()+'-'+$('select#month').val()+'-'+$('select#day').val());
 	var hour = dd.getHours();
 	if (hour > 12) {
 		if ((hour % 12) > 9) {
@@ -37,14 +35,7 @@ $(document).ready(function() {
 	}
   var ampm = (dd.getHours() > 11) ? 'PM' : 'AM';
   $('select#ampm').val(ampm);
-	$('input#time').val($('select#hour').val()+':'+$('select#min').val()+' '+$('select#ampm').val());
-	// 
-	$('select#year,select#month,select#day').change(function(event) {
-		$('input#date').val($('select#year').val()+'-'+$('select#month').val()+'-'+$('select#day').val());
-	});
-	$('select#hour,select#min,select#ampm').change(function(event) {
-		$('input#time').val($('select#hour').val()+':'+$('select#min').val()+' '+$('select#ampm').val());
-	});
+	// functions
 	$('input#map').click(function(event) {
 		var location = validate($('input#location').val());
 		var src = 'http://maps.google.com/maps/api/staticmap?markers=size:mid|color:purple|label:!|'+location+'&size=350x300&sensor=false';
@@ -53,76 +44,58 @@ $(document).ready(function() {
 		}); 
 	});
 	$('a#emerg').click(function() {
-		$('a#emerg').replaceWith('Emergency Email (2):<br/><input id="emerg2" type="email"></input>');
-		return false;
-	});
-	$('a#meta').click(function() {
-		$('div#meta').show();
-		$('div#action').hide();
+		//$('a#emerg').replaceWith('Emergency Contact (2):<br/><input id="emerg2" type="text"></input>');
+		$('a#emerg').hide();
+		$('input#emerge2').show();
 		return false;
 	});
 	$('input#create').click(function(event) {
-		var location = validate($('input#location').val());
-		var year = $('select#year').val();
-		var month = $('select#month').val();
-		var day = $('select#day').val();
-		var hour = ($('select#ampm').val()=='PM') ? parseInt($('select#hour').val())+12 : $('select#hour').val();
-		var min = $('select#min').val();
-		var emerg = validate($('input#emerg').val());
-		var emerg2 = validate($('input#emerg2').val());
-		var email = validate($('input#email').val());
-		var password = validate($('input#password').val());
-		var meta_url = validate($('input#meta-url').val());
-		var meta_name = validate($('input#meta-name').val());
-		var meta_phone = validate($('input#meta-phone').val());
-		var meta_email = validate($('input#meta-email').val());
-		var meta_any = validate($('textarea#meta-any').val());
-		var event = {
-    	location: location,
-    	datetime: new Date(year + "-" + month + "-" + day + " " + hour + ":" + min).toUTCString(),
-			notify: {
-				email: emerg,
-				email2: emerg2
-			},
-			username: email,
-			password: password,
-			metadata : {
-				url : meta_url,
-				name : meta_name,
-				phone : meta_phone,
-				email : meta_email,
-				anything : meta_any
-			}
-		}   
-		//alert(JSON.stringify(create))
-		$.ajax({
-			//username: create.username,
-			//password: create.password,
-			data: JSON.stringify(event),
-			url: "http://localhost/post", 
-			//url: "http://safehonu.com/post", //TODO: HTTPS
-			type: "POST",
-			contentType: "application/json",
-			timeout: 60000,
-			dataType: "json",
-			success: function(response) {
-				(response.info) ? modal_info(response.info) : modal_error(response.error);
-				$('input#create').attr('disabled','disabled');
-			},
-			error: function(response) {
-				// TODO: log errors
-				var error = 'Error: Ah, shoots brah!  Unable to create da event';
-				error += '<br/>&nbsp;&nbsp;&nbsp;(please try again, at da kine time)';
-				modal_error(error);
-				$('input#create').attr('disabled','disabled');
-			}
-		});   
+		var location = null;
+		var geocoder = new google.maps.Geocoder();
+		geocoder.geocode({ 'address': $('input#location').val() }, function (results, status) {
+			 location = (status == google.maps.GeocoderStatus.OK) ?  results[0].geometry.location.b + "," + results[0].geometry.location.c : null;
+			var year = $('select#year').val();
+			var month = $('select#month').val();
+			var day = $('select#day').val();
+			var hour = ($('select#ampm').val()=='PM') ? parseInt($('select#hour').val())+12 : $('select#hour').val();
+			var min = $('select#min').val();
+			var emerg = validate($('input#emerg').val());
+			var email = validate($('input#email').val());
+			var event = {
+				email: email,
+				location: {
+					lat: (location != null && location != undefined && location != '') ? location.split(',')[0] : null,
+					lng: (location != null && location != undefined && location != '') ? location.split(',')[1] : null
+				},
+				datetime: new Date(year + "-" + month + "-" + day + " " + hour + ":" + min).toUTCString(),
+				notify: emerg
+			}   
+			alert(JSON.stringify(event))
+			$.ajax({
+				data: JSON.stringify(event),
+				url: "http://localhost/post", 
+				//url: "http://safehonu.com/post", //TODO: HTTPS
+				type: "POST",
+				contentType: "application/json",
+				timeout: 60000,
+				dataType: "json",
+				success: function(response) {
+					(response.info) ? modal_info(response.info) : modal_error(response.error);
+					$('input#create').attr('disabled','disabled');
+				},
+				error: function(response) {
+					// TODO: log errors
+					modal_error('ERROR -- Unable to create da event... please try again<br/>&nbsp;&nbsp;&nbsp;(at da kine time)');
+					$('input#create').attr('disabled','disabled');
+				}
+			});   
+		});
 	});
 	function modal_info(message) {
-		$('div#modal').addClass('info').html(message).show();//.fadeTo(60000,0);
+		$('div#modal').addClass('info').html(message).show();
 	}
 	function modal_error(error) {
-		$('div#modal').addClass('error').html(error).show();//.fadeTo(60000,0);
+		$('div#modal').addClass('error').html(error).show();
 	}
 	function validate(input) {
 		return input;

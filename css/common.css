@@ -22,9 +22,11 @@ div#modal {
 	padding-left: 20px;
 }
 div .info {
+	border: 1px solid #fff;
 	background-color: #f9ffc9;
 }
 div .error {
+	border: 1px solid #fff;
 	background-color: #ffc9c9;
 }
 input[type="email"], input[type="password"], input[type="phone"], input[type="text"], input[type="url"], textarea {
@@ -48,10 +50,10 @@ select {
 span, span a {
 	vertical-align: top;
 }
-span.smaller {
+span.sm {
 	color: #7a9b9b;
 	font-size: 24px;
 }
-span.larger {
+span.lg {
 	font-size: 38px;
 }
