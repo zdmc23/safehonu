@@ -37,30 +37,26 @@ $(document).ready(function() {
   $('select#ampm').val(ampm);
 	// functions
 	$('input#map').click(function(event) {
-		var location = validate($('input#location').val());
+		var location = $('input#location').val();
 		var src = 'http://maps.google.com/maps/api/staticmap?markers=size:mid|color:purple|label:!|'+location+'&size=350x300&sensor=false';
 		$('img#map').attr('src', src).load(function() {
 			$('div#map').show();
 		}); 
 	});
-	$('a#emerg').click(function() {
-		//$('a#emerg').replaceWith('Emergency Contact (2):<br/><input id="emerg2" type="text"></input>');
-		$('a#emerg').hide();
-		$('input#emerge2').show();
-		return false;
-	});
 	$('input#create').click(function(event) {
-		var location = null;
+		var lat_lng = null;
 		var geocoder = new google.maps.Geocoder();
 		geocoder.geocode({ 'address': $('input#location').val() }, function (results, status) {
-			 location = (status == google.maps.GeocoderStatus.OK) ?  results[0].geometry.location.b + "," + results[0].geometry.location.c : null;
+			//alert(JSON.stringify(results[0]));
+			lat_lng = (status == google.maps.GeocoderStatus.OK) ?  results[0].geometry.location.ra + "," + results[0].geometry.location.sa : null;
+			var location = lat_lng;
 			var year = $('select#year').val();
 			var month = $('select#month').val();
 			var day = $('select#day').val();
 			var hour = ($('select#ampm').val()=='PM') ? parseInt($('select#hour').val())+12 : $('select#hour').val();
 			var min = $('select#min').val();
-			var emerg = validate($('input#emerg').val());
-			var email = validate($('input#email').val());
+			var notify = $('input#notify').val();
+			var email = $('input#email').val();
 			var event = {
 				email: email,
 				location: {
@@ -68,36 +64,69 @@ $(document).ready(function() {
 					lng: (location != null && location != undefined && location != '') ? location.split(',')[1] : null
 				},
 				datetime: new Date(year + "-" + month + "-" + day + " " + hour + ":" + min).toUTCString(),
-				notify: emerg
+				notify: notify
 			}   
-			alert(JSON.stringify(event))
-			$.ajax({
-				data: JSON.stringify(event),
-				url: "http://localhost/post", 
-				//url: "http://safehonu.com/post", //TODO: HTTPS
-				type: "POST",
-				contentType: "application/json",
-				timeout: 60000,
-				dataType: "json",
-				success: function(response) {
-					(response.info) ? modal_info(response.info) : modal_error(response.error);
-					$('input#create').attr('disabled','disabled');
-				},
-				error: function(response) {
-					// TODO: log errors
-					modal_error('ERROR -- Unable to create da event... please try again<br/>&nbsp;&nbsp;&nbsp;(at da kine time)');
-					$('input#create').attr('disabled','disabled');
-				}
-			});   
+			//alert(JSON.stringify(event))
+			if (validate(event)) post(event);
 		});
 	});
 	function modal_info(message) {
-		$('div#modal').addClass('info').html(message).show();
+		$('div#modal').removeClass('error').addClass('info').html(message).show();
 	}
 	function modal_error(error) {
-		$('div#modal').addClass('error').html(error).show();
+		$('div#modal').removeClass('info').addClass('error').html(error).show();
 	}
-	function validate(input) {
-		return input;
+	function validate(event) {
+		$(':input').removeClass('invalid');
+		var invalid_input = false;
+		if (invalid(event.email) || !isEmail(event.email)) {
+			$('input#email').addClass('invalid');
+			invalid_input = true;
+		}
+		if (invalid(event.location.lat) || invalid(event.location.lng)) {
+			$('input#location').addClass('invalid');
+			invalid_input = true;
+		}
+		if (invalid(event.notify) || (!isPhone(event.notify) && !isEmail(event.notify))) {
+			$('input#notify').addClass('invalid');
+			invalid_input = true;
+		}
+		if (invalid_input) {
+			modal_error('ERROR -- Invalid form input...<br/>&nbsp;&nbsp;&nbsp;(please update and try again)');
+			return false;
+		}
+		return true;
+	}
+	function post(event) {
+		$.ajax({
+			data: JSON.stringify(event),
+			url: "http://localhost/post", 
+			//url: "http://safehonu.com/post", //TODO: HTTPS
+			type: "POST",
+			contentType: "application/json",
+			timeout: 60000,
+			dataType: "json",
+			success: function(response) {
+				(response.info) ? modal_info(response.info) : modal_error(response.error);
+				$('input#create').attr('disabled','disabled');
+			},
+			error: function(response) {
+				// TODO: log errors
+				modal_error('ERROR -- Unable to create da event... please try again<br/>&nbsp;&nbsp;&nbsp;(at da kine time)');
+				$('input#create').attr('disabled','disabled');
+			}
+		});   
+	}
+	function invalid(input) {
+		if (input === null || input === undefined || input === '') return true;
+		return false;
+	}
+	function isEmail(input) {
+ 		if (String(input).search(/^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/) != -1) return true;
+		return false;
+	}
+	function isPhone(input) {
+ 		if (String(input.replace(/\(/g,'').replace(/\)/g,'').replace(/\-/g,'').replace(/\ /g,'').replace(/\./g,'')).search(/^\s*\d{10}\s*$/) != -1) return true;
+		return false;
 	}
 });
