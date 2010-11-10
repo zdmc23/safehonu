@@ -29,7 +29,7 @@ div .error {
 	border: 1px solid #fff;
 	background-color: #ffc9c9;
 }
-input[type="email"], input[type="password"], input[type="phone"], input[type="text"], input[type="url"], textarea {
+input[type="email"], input[type="text"] {
 	font-family: inherit;
 	font-size: inherit;
 	padding: 2px;
@@ -56,4 +56,7 @@ span.sm {
 }
 span.lg {
 	font-size: 38px;
+}
+.invalid {
+	background-color: #ffc9c9;
 }
