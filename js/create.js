@@ -44,6 +44,7 @@ $(document).ready(function() {
 		}); 
 	});
 	$('input#create').click(function(event) {
+		$('input#create').attr('disabled','disabled');
 		var lat_lng = null;
 		var geocoder = new google.maps.Geocoder();
 		geocoder.geocode({ 'address': $('input#location').val() }, function (results, status) {
@@ -64,7 +65,12 @@ $(document).ready(function() {
 					lng: (location != null && location != undefined && location != '') ? location.split(',')[1] : null
 				},
 				datetime: new Date(year + "-" + month + "-" + day + " " + hour + ":" + min).toUTCString(),
-				notify: notify
+				distance: '1.6',  // km
+				time: '30', 			// min
+				notify: notify,
+				log: {
+					created: new Date().toUTCString()
+				}
 			}   
 			//alert(JSON.stringify(event))
 			if (validate(event)) post(event);
@@ -108,12 +114,10 @@ $(document).ready(function() {
 			dataType: "json",
 			success: function(response) {
 				(response.info) ? modal_info(response.info) : modal_error(response.error);
-				$('input#create').attr('disabled','disabled');
 			},
 			error: function(response) {
 				// TODO: log errors
 				modal_error('ERROR -- Unable to create da event... please try again<br/>&nbsp;&nbsp;&nbsp;(at da kine time)');
-				$('input#create').attr('disabled','disabled');
 			}
 		});   
 	}
