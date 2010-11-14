@@ -21,8 +21,7 @@ $(document).ready(function() {
 			return;
 		}
 		var checkin = {
-    	username: $('input#email').val(),
-    	password: $('input#password').val(),
+    	email: $('input#email').val(),
     	datetime: new Date().toUTCString(), // GMT!
     	location: {
 				lat: current_position.split(',')[0],
