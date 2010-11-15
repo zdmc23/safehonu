@@ -9,7 +9,9 @@ $(document).ready(function() {
   var fmt_day = (day < 10) ? '0' + day : day;
   $('select#day').val(fmt_day);
 	var hour = dd.getHours();
-	if (hour > 12) {
+	if (hour === 0) {
+		hour = '12';
+	} else if (hour > 12) {
 		if ((hour % 12) > 9) {
 			hour = (hour % 12);
 		} else {
@@ -44,12 +46,11 @@ $(document).ready(function() {
 		}); 
 	});
 	$('input#create').click(function(event) {
-		$('input#create').attr('disabled','disabled');
 		var lat_lng = null;
 		var geocoder = new google.maps.Geocoder();
 		geocoder.geocode({ 'address': $('input#location').val() }, function (results, status) {
 			//alert(JSON.stringify(results[0]));
-			lat_lng = (status == google.maps.GeocoderStatus.OK) ?  results[0].geometry.location.ra + "," + results[0].geometry.location.sa : null;
+			lat_lng = (status == google.maps.GeocoderStatus.OK) ?  results[0].geometry.location.sa + "," + results[0].geometry.location.ta : null;
 			var location = lat_lng;
 			var year = $('select#year').val();
 			var month = $('select#month').val();
@@ -58,12 +59,15 @@ $(document).ready(function() {
 			var min = $('select#min').val();
 			var notify = $('input#notify').val();
 			var email = $('input#email').val();
+			var name = $('input#name').val();
 			var event = {
 				email: email,
+				name: name,
 				location: {
 					lat: (location != null && location != undefined && location != '') ? location.split(',')[0] : null,
 					lng: (location != null && location != undefined && location != '') ? location.split(',')[1] : null
 				},
+				// TODO: datetime is off by 12 hrs, when choosing hour=12
 				datetime: new Date(year + "-" + month + "-" + day + " " + hour + ":" + min).toUTCString(),
 				distance: '1.6',  // km
 				time: '30', 			// min
@@ -97,6 +101,10 @@ $(document).ready(function() {
 			$('input#notify').addClass('invalid');
 			invalid_input = true;
 		}
+		if (invalid(event.name)) {
+			$('input#name').addClass('invalid');
+			invalid_input = true;
+		}
 		if (invalid_input) {
 			modal_error('ERROR -- Invalid form input...<br/>&nbsp;&nbsp;&nbsp;(please update and try again)');
 			return false;
@@ -104,6 +112,7 @@ $(document).ready(function() {
 		return true;
 	}
 	function post(event) {
+		$('input#create').attr('disabled','disabled');
 		$.ajax({
 			data: JSON.stringify(event),
 			url: "http://localhost/post", 
@@ -130,7 +139,7 @@ $(document).ready(function() {
 		return false;
 	}
 	function isPhone(input) {
- 		if (String(input.replace(/\(/g,'').replace(/\)/g,'').replace(/\-/g,'').replace(/\ /g,'').replace(/\./g,'')).search(/^\s*\d{10}\s*$/) != -1) return true;
+		if (String(input.replace(/\(/g,'').replace(/\)/g,'').replace(/\-/g,'').replace(/\ /g,'').replace(/\./g,'')).search(/^\s*\d{10}\s*$/) != -1) return true;
 		return false;
 	}
 });
