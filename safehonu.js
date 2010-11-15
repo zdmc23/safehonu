@@ -20,9 +20,6 @@ fs_mod.readFile('conf/props.js', encoding='utf-8', function (err, data) {
 			case '/post':
 				post(req,res,props);
 			break;
-			case '/twilio':
-				twilio(req,res);
-			break;
 			default:
 				res.writeHead(404);
 				console.log('oh dear, 404, but nginx should\'ve handled this!');
@@ -47,8 +44,10 @@ function post(req,res,props) {
 	});
 }
 
+// TODO: email or phone emergency contact -- "You have been designated as an emergency contact... you will be receiving an email or phone call, if John Doe fails to show up for the meeting."
 function event(req,res,post,props) {
 	console.log(JSON.stringify(post));
+	// TODO: validate for api (i.e., notify phone, email)
 	var request = http_mod.createClient(5984, 'localhost').request('POST', '/events', {'Content-type': 'application/json'});
 	request.write(JSON.stringify(post),encoding='utf-8');
 	request.end();
@@ -124,6 +123,7 @@ function checkin(req,res,post) {
 							res.end(JSON.stringify({ 'info': message }));
 							return;
 						}
+						// TODO: figure out why this triggered on a successful check-in...
 						res.end(JSON.stringify({ 'error': 'Unable to check-in!'}));
 					});
 				});
@@ -155,7 +155,6 @@ function confirm_delete(req,res,url,confirm) {
 		response.addListener('data', function (chunk) { body += chunk });
 		response.addListener('end', function () { 
 			var response = JSON.parse(body);
-			console.log(response);
 			if (response.error) { 
 				res.writeHead(500)
 				res.end();
@@ -168,6 +167,7 @@ function confirm_delete(req,res,url,confirm) {
 				"confirmed": (confirm) ? new Date().toUTCString() : record.log.confirmed, 
 				"notified": record.log.notified
 			}
+			console.log(record);
 			var request = http_mod.createClient(5984, 'localhost').request('PUT', '/events/' + url.query.id);
 			request.write(JSON.stringify(record),encoding='utf-8');
 			request.end();
@@ -191,11 +191,6 @@ function confirm_delete(req,res,url,confirm) {
 			});
 		});
 	});
-}
-
-function twilio(req,res) {
-	res.writeHead(200, {'Content-Type': 'text/xml'});
-	res.end('<?xml version="1.0" encoding="UTF-8" ?><Response><Say voice="woman" loop="2">Hello</Say></Response>');
 }
 
 // spherical law of cosines
