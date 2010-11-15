@@ -26,7 +26,7 @@ fs_mod.readFile('conf/props.js', encoding='utf-8', function (err, data) {
 				});
 			});
 		});
-	}, 5000);
+	}, 120000);
 });
 
 function notify(event,props) {
