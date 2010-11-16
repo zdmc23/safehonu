@@ -49,7 +49,6 @@ $(document).ready(function() {
 		var lat_lng = null;
 		var geocoder = new google.maps.Geocoder();
 		geocoder.geocode({ 'address': $('input#location').val() }, function (results, status) {
-			//alert(JSON.stringify(results[0]));
 			lat_lng = (status == google.maps.GeocoderStatus.OK) ?  results[0].geometry.location.sa + "," + results[0].geometry.location.ta : null;
 			var location = lat_lng;
 			var year = $('select#year').val();
@@ -62,8 +61,6 @@ $(document).ready(function() {
 			var notify = $('input#notify').val();
 			var email = $('input#email').val();
 			var name = $('input#name').val();
-			//alert('local datetime: ' + new Date(year + "-" + month + "-" + day + " " + hour + ":" + min))
-			//alert('utc datetime: ' + new Date(year + "-" + month + "-" + day + " " + hour + ":" + min).toUTCString())
 			var event = {
 				email: email,
 				name: name,
@@ -71,8 +68,7 @@ $(document).ready(function() {
 					lat: (location != null && location != undefined && location != '') ? location.split(',')[0] : null,
 					lng: (location != null && location != undefined && location != '') ? location.split(',')[1] : null
 				},
-				// TODO: datetime is off by 12 hrs, when choosing hour=12
-				datetime: new Date(year + "-" + month + "-" + day + " " + hour + ":" + min).toUTCString(),
+				datetime: new Date(year, month, day, hour, min, 0, 0).toUTCString(),
 				distance: '1.6',  // km
 				time: '30', 			// min
 				notify: notify,
@@ -80,7 +76,6 @@ $(document).ready(function() {
 					created: new Date().toUTCString()
 				}
 			}   
-			//alert(JSON.stringify(event))
 			if (validate(event)) post(event);
 		});
 	});
