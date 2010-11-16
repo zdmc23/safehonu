@@ -55,11 +55,15 @@ $(document).ready(function() {
 			var year = $('select#year').val();
 			var month = $('select#month').val();
 			var day = $('select#day').val();
-			var hour = ($('select#ampm').val()=='PM') ? parseInt($('select#hour').val())+12 : $('select#hour').val();
+			var hour = ($('select#ampm').val()=='PM') ? Number($('select#hour').val())+Number(12) : $('select#hour').val();
+			if (hour == 12) hour = 00;
+			if (hour == 24) hour = 12;
 			var min = $('select#min').val();
 			var notify = $('input#notify').val();
 			var email = $('input#email').val();
 			var name = $('input#name').val();
+			//alert('local datetime: ' + new Date(year + "-" + month + "-" + day + " " + hour + ":" + min))
+			//alert('utc datetime: ' + new Date(year + "-" + month + "-" + day + " " + hour + ":" + min).toUTCString())
 			var event = {
 				email: email,
 				name: name,
