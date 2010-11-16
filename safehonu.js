@@ -22,7 +22,6 @@ fs_mod.readFile('conf/props.js', encoding='utf-8', function (err, data) {
 			break;
 			default:
 				res.writeHead(404);
-				console.log('oh dear, 404, but nginx should\'ve handled this!');
 		}
 	}).listen(8125, "localhost");
 	console.log('Server running at http://localhost:8125');
@@ -44,20 +43,20 @@ function post(req,res,props) {
 	});
 }
 
-// TODO: email or phone emergency contact -- "You have been designated as an emergency contact... you will be receiving an email or phone call, if John Doe fails to show up for the meeting."
 function event(req,res,post,props) {
 	console.log(JSON.stringify(post));
+	var validated_post = validate(post);
 	// TODO: validate for api (i.e., notify phone, email)
 	var request = http_mod.createClient(5984, 'localhost').request('POST', '/events', {'Content-type': 'application/json'});
-	request.write(JSON.stringify(post),encoding='utf-8');
+	request.write(JSON.stringify(validated_post),encoding='utf-8');
 	request.end();
 	request.on('response', function (response) {
 		response.setEncoding('utf8');
 		var body = '';
 		response.on('data', function (chunk) { body += chunk; });
 		response.on('end', function () { 
-			console.log(body);
 			var response = JSON.parse(body);
+			console.log(JSON.stringify(response));
 			var id = response.id;
 			var rev = response.rev;
 			var api_user = props.sendgrid.api_user;
@@ -77,8 +76,8 @@ function event(req,res,post,props) {
 				var body = '';
 				response.on('data', function (chunk) { body += chunk; });
 				response.on('end', function () { 
-					console.log(body);
 					var response = JSON.parse(body);
+					console.log(JSON.stringify(response));
 					if (response.message === 'success') {
 						var message = 'We\'re lookin\' out for ya... check-in soon!  Mahalo<br/>&nbsp;&nbsp;&nbsp;(to create another, just refresh the page)';
 						res.end(JSON.stringify({ 'info': message }));
@@ -101,9 +100,7 @@ function checkin(req,res,post) {
 		response.on('data', function (chunk) { body += chunk; });
 		response.on('end', function () { 
 			var response = JSON.parse(body);
-			//console.log('before _.select: ' + response.rows.length);
 			var events = _.select(response.rows, function(row) { return evaluate_checkin(post,row.value); });
-			//console.log('after _.select: ' + events.length);
 			_.each(events, function(event) { 
 				var record = event.value;
 				record.checkin = { "datetime": post.datetime, "location": post.location };
@@ -116,8 +113,8 @@ function checkin(req,res,post) {
 					var body = "";
 					response.addListener('data', function (chunk) { body += chunk });
 					response.addListener('end', function () { 
-						console.log(body)
 						var response = JSON.parse(body);
+						console.log(JSON.stringify(response));
 						if (response.message === 'success') {
 							var message = 'A hui hou... Until we meet again!  Mahalo<br/>&nbsp;&nbsp;&nbsp;(to check-in afresh, just refresh .. the page)';
 							res.end(JSON.stringify({ 'info': message }));
@@ -167,7 +164,6 @@ function confirm_delete(req,res,url,confirm) {
 				"confirmed": (confirm) ? new Date().toUTCString() : record.log.confirmed, 
 				"notified": record.log.notified
 			}
-			console.log(record);
 			var request = http_mod.createClient(5984, 'localhost').request('PUT', '/events/' + url.query.id);
 			request.write(JSON.stringify(record),encoding='utf-8');
 			request.end();
@@ -176,7 +172,8 @@ function confirm_delete(req,res,url,confirm) {
 				var body = "";
 				response.addListener('data', function (chunk) { body += chunk });
 				response.addListener('end', function () { 
-					console.log(body)
+					var response = JSON.parse(body);
+					console.log(JSON.stringify(response));
 					if (req.method === 'GET') { 
 						res.writeHead(200, {'Content-Type': 'text/html'});
 						// TODO: better html responses (event info)
@@ -191,6 +188,11 @@ function confirm_delete(req,res,url,confirm) {
 			});
 		});
 	});
+}
+
+// TODO: actually do some validation
+function validate(post) {
+	return post;
 }
 
 // spherical law of cosines
