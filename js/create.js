@@ -119,8 +119,7 @@ $(document).ready(function() {
 		$('input#create').attr('disabled','disabled');
 		$.ajax({
 			data: JSON.stringify(event),
-			url: "http://localhost/post", 
-			//url: "http://safehonu.com/post", //TODO: HTTPS
+			url: "http://safehonu.com/post", //TODO: HTTPS
 			type: "POST",
 			contentType: "application/json",
 			timeout: 60000,

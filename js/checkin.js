@@ -31,8 +31,7 @@ $(document).ready(function() {
 		//if (debug) alert(JSON.stringify(checkin));
 		$.ajax({
 			data: JSON.stringify(checkin), 
-			url: "http://localhost/post", 
-			//url: "http://safehonu.com/post", //TODO: HTTPS
+			url: "http://safehonu.com/post", //TODO: HTTPS
 			type: "POST",
 			contentType: "application/json",
 			timeout: 60000,
