@@ -46,7 +46,6 @@ function post(req,res,props) {
 function event(req,res,post,props) {
 	console.log(JSON.stringify(post));
 	var validated_post = validate(post);
-	// TODO: validate for api (i.e., notify phone, email)
 	var request = http_mod.createClient(5984, 'localhost').request('POST', '/events', {'Content-type': 'application/json'});
 	request.write(JSON.stringify(validated_post),encoding='utf-8');
 	request.end();
@@ -90,8 +89,10 @@ function event(req,res,post,props) {
 	});
 }
 
+// TODO: need much more informative check-in responses (i.e., you checked in too early, no events found) 
 function checkin(req,res,post) {
 	console.log(JSON.stringify(post));
+	var success_message = 'A hui hou... Until we meet again!  Mahalo<br/>&nbsp;&nbsp;&nbsp;(to check-in afresh, just refresh .. the page)';
 	var request = http_mod.createClient(5984, 'localhost').request('GET', '/events/_design/byAuth/_view/byAuthAndActive?key="' + post.email + '"');
 	request.end();
 	request.on('response', function (response) {
@@ -100,7 +101,12 @@ function checkin(req,res,post) {
 		response.on('data', function (chunk) { body += chunk; });
 		response.on('end', function () { 
 			var response = JSON.parse(body);
+			console.log(JSON.stringify(response));
 			var events = _.select(response.rows, function(row) { return evaluate_checkin(post,row.value); });
+			if (events.length === 0) {
+				res.end(JSON.stringify({ 'info': success_message }));
+				return;
+			}
 			_.each(events, function(event) { 
 				var record = event.value;
 				record.checkin = { "datetime": post.datetime, "location": post.location };
@@ -116,11 +122,9 @@ function checkin(req,res,post) {
 						var response = JSON.parse(body);
 						console.log(JSON.stringify(response));
 						if (response.message === 'success') {
-							var message = 'A hui hou... Until we meet again!  Mahalo<br/>&nbsp;&nbsp;&nbsp;(to check-in afresh, just refresh .. the page)';
-							res.end(JSON.stringify({ 'info': message }));
+							res.end(JSON.stringify({ 'info': success_message }));
 							return;
 						}
-						// TODO: figure out why this triggered on a successful check-in...
 						res.end(JSON.stringify({ 'error': 'Unable to check-in!'}));
 					});
 				});
