@@ -51,7 +51,7 @@ $(document).ready(function() {
 			lat_lng = (status == google.maps.GeocoderStatus.OK) ?  results[0].geometry.location.lat() + "," + results[0].geometry.location.lng() : null;
 			var location = lat_lng;
 			var year = $('select#year').val();
-			var month = $('select#month').val();
+			var month = Number($('select#month').val())-Number(1);
 			var day = $('select#day').val();
 			var hour = ($('select#ampm').val()=='PM') ? Number($('select#hour').val())+Number(12) : $('select#hour').val();
 			if (hour == 12) hour = 00;
@@ -126,7 +126,7 @@ $(document).ready(function() {
 				$('span#loading').hide();
 			},
 			error: function(response) {
-				modal_error('Unable to create the event... please try again<br/>&nbsp;&nbsp;&nbsp;(at da kine time)');
+				modal_error('Unable to create the event... please refresh and try again (at da kine time)');
 				$('span#loading').hide();
 			}
 		});   
