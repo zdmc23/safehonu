@@ -7,10 +7,7 @@ $(document).ready(function() {
 		navigator.geolocation.getCurrentPosition(function(position) {  
 			$('div#loading').hide();
 			current_position = position.coords.latitude + ',' + position.coords.longitude;
-			var src = 'http://maps.google.com/maps/api/staticmap?markers=size:mid|color:purple|label:!|'+current_position+'&size=350x300&sensor=false';
-			$('img#map').attr('src', src).load(function() {
-				$('div#map').show();
-			});
+			$('div#map').html('<div><img src="http://maps.google.com/maps/api/staticmap?markers=size:mid|color:purple|label:!|'+current_position+'&size=350x300&sensor=false"></img></div>').show();
 		}); 
 	} 
 	$('input#checkin').click(function(event) {

@@ -41,14 +41,7 @@ $(document).ready(function() {
 	// functions
 	$('input#map').click(function(event) {
 		var location = $('input#location').val();
-		alert('clickety... clack');
-		$('span#map').html('<div><img src="http://maps.google.com/maps/api/staticmap?markers=size:mid|color:purple|label:!|'+location+'&size=350x300&sensor=false"></img></div>');
-		/*
-		var src = 'http://maps.google.com/maps/api/staticmap?markers=size:mid|color:purple|label:!|'+location+'&size=350x300&sensor=false';
-		$('img#map').attr('src', src).load(function() {
-			$('div#map').show();
-		}); 
-		*/
+		$('div#map').html('<div><img src="http://maps.google.com/maps/api/staticmap?markers=size:mid|color:purple|label:!|'+location+'&size=350x300&sensor=false"></img></div>').show();
 	});
 	$('input#create').click(function(event) {
 		var lat_lng = null;
@@ -118,6 +111,7 @@ $(document).ready(function() {
 	}
 	function post(event) {
 		$('input#create').attr('disabled','disabled');
+		$('div#modal').hide();
 		$('span#loading').show();
 		$.ajax({
 			data: JSON.stringify(event),
