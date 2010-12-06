@@ -46,8 +46,9 @@ $(document).ready(function() {
 	$('input#create').click(function(event) {
 		var lat_lng = null;
 		var geocoder = new google.maps.Geocoder();
+		// TODO: do this after validation?
 		geocoder.geocode({ 'address': $('input#location').val() }, function (results, status) {
-			lat_lng = (status == google.maps.GeocoderStatus.OK) ?  results[0].geometry.location.lat + "," + results[0].geometry.location.lng : null;
+			lat_lng = (status == google.maps.GeocoderStatus.OK) ?  results[0].geometry.location.lat() + "," + results[0].geometry.location.lng() : null;
 			var location = lat_lng;
 			var year = $('select#year').val();
 			var month = $('select#month').val();
