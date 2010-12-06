@@ -5,7 +5,7 @@ body {
 	color: #000; 
 	text-shadow: 2px 2px 2px #fff;
 	font-family: 'Yanone Kaffeesatz', sans-serif, serif;
-	font-size: 30px;
+	font-size: 28px;
 	margin: 0; 
 	padding: 10px; 
 }
@@ -15,11 +15,8 @@ div {
 	width: 390px;
 }
 div#modal {
- 	border-radius: 10px 20px 10px 20px; 
-	font-size: 20px;
-	height: 50px;
-	width: 100%;
-	padding-left: 20px;
+	font-family: sans-serif, serif;
+	font-size: 16px;
 }
 div .info {
 	border: 1px solid #fff;
@@ -37,13 +34,13 @@ input[type="email"], input[type="text"] {
 }
 input[type="button"] {
 	font-family: inherit;
-	font-size: 36px;
+	font-size: 32px;
 	padding: 5px;
 	text-shadow: inherit; 
 }
 select {
 	font-family: inherit;
-	font-size: 36px;
+	font-size: 32px;
 	padding: 5px;
 	text-shadow: inherit; 
 }
@@ -52,7 +49,8 @@ span, span a {
 }
 span.sm {
 	color: #7a9b9b;
-	font-size: 24px;
+	font-family: sans-serif, serif;
+	font-size: 16px;
 }
 span.lg {
 	font-size: 38px;

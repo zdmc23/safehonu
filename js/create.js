@@ -1,5 +1,6 @@
 $(document).ready(function() {
-	$('div#map').hide();
+	$('div#modal').hide();
+	$('span#loading').hide();
 	var dd = new Date();
   $('select#year').val(dd.getFullYear());
 	var month = dd.getMonth()+1;
@@ -40,10 +41,14 @@ $(document).ready(function() {
 	// functions
 	$('input#map').click(function(event) {
 		var location = $('input#location').val();
+		alert('clickety... clack');
+		$('span#map').html('<div><img src="http://maps.google.com/maps/api/staticmap?markers=size:mid|color:purple|label:!|'+location+'&size=350x300&sensor=false"></img></div>');
+		/*
 		var src = 'http://maps.google.com/maps/api/staticmap?markers=size:mid|color:purple|label:!|'+location+'&size=350x300&sensor=false';
 		$('img#map').attr('src', src).load(function() {
 			$('div#map').show();
 		}); 
+		*/
 	});
 	$('input#create').click(function(event) {
 		var lat_lng = null;
@@ -80,10 +85,11 @@ $(document).ready(function() {
 		});
 	});
 	function modal_info(message) {
-		$('div#modal').removeClass('error').addClass('info').html(message).show();
+		$('div#modal').removeClass('error').addClass('info').html('<img src="img/emoticon_happy.png"></img>&nbsp;Mahalo!&nbsp;&nbsp;'+message).show();
 	}
 	function modal_error(error) {
-		$('div#modal').removeClass('info').addClass('error').html(error).show();
+		// TODO: log errors
+		$('div#modal').removeClass('info').addClass('error').html('<img src="img/exclamation.png"></img>&nbsp;'+error).show();
 	}
 	function validate(event) {
 		$(':input').removeClass('invalid');
@@ -105,13 +111,14 @@ $(document).ready(function() {
 			invalid_input = true;
 		}
 		if (invalid_input) {
-			modal_error('ERROR -- Invalid form input...<br/>&nbsp;&nbsp;&nbsp;(please update and try again)');
+			modal_error('Invalid form input... please update and try again');
 			return false;
 		}
 		return true;
 	}
 	function post(event) {
 		$('input#create').attr('disabled','disabled');
+		$('span#loading').show();
 		$.ajax({
 			data: JSON.stringify(event),
 			url: "http://safehonu.com/post", //TODO: HTTPS
@@ -121,10 +128,11 @@ $(document).ready(function() {
 			dataType: "json",
 			success: function(response) {
 				(response.info) ? modal_info(response.info) : modal_error(response.error);
+				$('span#loading').hide();
 			},
 			error: function(response) {
-				// TODO: log errors
-				modal_error('ERROR -- Unable to create da event... please try again<br/>&nbsp;&nbsp;&nbsp;(at da kine time)');
+				modal_error('Unable to create the event... please try again<br/>&nbsp;&nbsp;&nbsp;(at da kine time)');
+				$('span#loading').hide();
 			}
 		});   
 	}
